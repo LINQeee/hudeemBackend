@@ -34,7 +34,14 @@ public class UserController {
     public ResponseEntity<?> getUserInfo(@RequestParam Long id) {
         UserEntity userEntity = userService.getUser(id);
         UserDTO userDTO = userMapper.toDTO(userEntity);
-        List<RecordDTO> recordDTOList = userEntity.getRecords().stream().map(recordMapper::toDTO).toList();
+        List<RecordDTO> recordDTOList = userEntity.getRecords()
+                .stream()
+                .map(recordEntity -> {
+                    var dto = recordMapper.toDTO(recordEntity);
+                    dto.setUserId(id);
+                    return dto;
+                })
+                .toList();
         SummaryDTO summaryDTO = SummaryDTO.builder().userDTO(userDTO).recordDTOList(recordDTOList).build();
         return ResponseEntity.ok(summaryDTO);
     }
