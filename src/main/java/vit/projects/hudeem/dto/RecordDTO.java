@@ -2,12 +2,11 @@ package vit.projects.hudeem.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class RecordDTO {
-    private Long id;
     private double currentWeight;
-    private Date date;
+    private LocalDate date;
     private Long userId;
 }
