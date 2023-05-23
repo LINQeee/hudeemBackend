@@ -7,7 +7,6 @@ import vit.projects.hudeem.entities.RecordEntity;
 import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.mappers.RecordMapper;
 import vit.projects.hudeem.repositories.RecordRepository;
-import vit.projects.hudeem.repositories.UserRepository;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;
@@ -16,27 +15,18 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 public class RecordService {
     private final RecordRepository recordRepository;
-    private final UserRepository userRepository;
     private final RecordMapper recordMapper;
 
     public RecordDTO saveRecord(RecordDTO recordDTO) {
-        //get record entity for update
         RecordEntity recordEntity = recordMapper.fromDTO(recordDTO);
-        //get associated user for update progress
-        UserEntity userEntity = userRepository.findById(recordDTO.getUserId()).get();
-        updateProgress(userEntity, recordEntity);
-        //set user to record and save both entities
-        recordEntity.setUser(userEntity);
+        updateProgress(recordEntity);
         RecordEntity saved = recordRepository.save(recordEntity);
-        //convert saved record to dto
-        RecordDTO savedDTO = recordMapper.toDTO(saved);
-        //set userId to record dto
-        savedDTO.setUserId(saved.getUser().getId());
-        return savedDTO;
+        return recordMapper.toDTO(saved);
     }
 
-    private void updateProgress(UserEntity userEntity, RecordEntity recordEntity) {
+    private void updateProgress(RecordEntity recordEntity) {
         //calculate progress only if record is new
+        UserEntity userEntity = recordEntity.getUser();
         if (!recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
             double current = userEntity.getInitialWeight() - recordEntity.getCurrentWeight();
             double total = userEntity.getInitialWeight() - userEntity.getGoalWeight();
