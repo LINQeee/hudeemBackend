@@ -16,25 +16,16 @@ import java.util.Comparator;
 public class RecordService {
     private final RecordRepository recordRepository;
     private final RecordMapper recordMapper;
+    private final MetricService metricService;
 
     public RecordDTO saveRecord(RecordDTO recordDTO) {
         RecordEntity recordEntity = recordMapper.fromDTO(recordDTO);
-        updateProgress(recordEntity);
-        RecordEntity saved = recordRepository.save(recordEntity);
-        return recordMapper.toDTO(saved);
-    }
-
-    private void updateProgress(RecordEntity recordEntity) {
-        //calculate progress only if record is new
         UserEntity userEntity = recordEntity.getUser();
         if (!recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
-            double current = userEntity.getInitialWeight() - recordEntity.getCurrentWeight();
-            double total = userEntity.getInitialWeight() - userEntity.getGoalWeight();
-            double progress = current / total;
-            String formattedProgress = new DecimalFormat("#.##").format(progress);
-            userEntity.setProgress(Double.parseDouble(formattedProgress));
-            //userRepository.save(userEntity);
+            recordEntity = metricService.getUpdatedWithAllMetrics(recordEntity);
         }
+        RecordEntity saved = recordRepository.save(recordEntity);
+        return recordMapper.toDTO(saved);
     }
 
     private RecordEntity getLatestRecord(UserEntity userEntity) {

@@ -3,6 +3,7 @@ package vit.projects.hudeem.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -21,4 +22,12 @@ public class UserEntity {
     private double progress;
     @OneToMany(mappedBy = "user")
     private List<RecordEntity> records;
+    private LocalDate startDate;
+    private double perDay;
+    private double perWeek;
+    private LocalDate plannedDate;
+    private double currentWeight;
+    private double weightLost;
+    private double weightLeft;
+
 }
