@@ -10,6 +10,7 @@ import vit.projects.hudeem.repositories.RecordRepository;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,14 +19,14 @@ public class RecordService {
     private final RecordMapper recordMapper;
     private final MetricService metricService;
 
-    public RecordDTO saveRecord(RecordDTO recordDTO) {
+    public String saveRecord(RecordDTO recordDTO) {
         RecordEntity recordEntity = recordMapper.fromDTO(recordDTO);
         UserEntity userEntity = recordEntity.getUser();
         if (!recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
             recordEntity = metricService.getUpdatedWithAllMetrics(recordEntity);
         }
-        RecordEntity saved = recordRepository.save(recordEntity);
-        return recordMapper.toDTO(saved);
+        recordRepository.save(recordEntity);
+        return "successful";
     }
 
     private RecordEntity getLatestRecord(UserEntity userEntity) {
@@ -33,5 +34,10 @@ public class RecordService {
                 .stream()
                 .max(Comparator.comparing(RecordEntity::getDate))
                 .get();
+    }
+
+    public String saveRecordList(List<RecordDTO> recordDTOList) {
+        recordDTOList.forEach(this::saveRecord);
+        return "successful";
     }
 }

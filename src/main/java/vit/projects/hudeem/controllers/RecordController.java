@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import vit.projects.hudeem.dto.RecordDTO;
 import vit.projects.hudeem.services.RecordService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
@@ -18,5 +20,10 @@ public class RecordController {
     @PostMapping("/record")
     public ResponseEntity<?> saveRecord(@RequestBody RecordDTO recordDTO) {
         return ResponseEntity.ok(recordService.saveRecord(recordDTO));
+    }
+
+    @PostMapping("/recordlist")
+    public ResponseEntity<?> saveRecordList(@RequestBody List<RecordDTO> recordDTOList) {
+        return ResponseEntity.ok(recordService.saveRecordList(recordDTOList));
     }
 }
