@@ -10,8 +10,10 @@ import java.time.LocalDate;
 @Table(name = "record")
 public class RecordEntity {
 
-    private double currentWeight;
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private double currentWeight;
     private LocalDate date;
     @ManyToOne
     @JoinColumn(name = "user_id")
