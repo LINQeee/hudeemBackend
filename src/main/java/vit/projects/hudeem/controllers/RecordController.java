@@ -2,10 +2,7 @@ package vit.projects.hudeem.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vit.projects.hudeem.dto.RecordDTO;
 import vit.projects.hudeem.services.RecordService;
 
@@ -25,5 +22,10 @@ public class RecordController {
     @PostMapping("/recordlist")
     public ResponseEntity<?> saveRecordList(@RequestBody List<RecordDTO> recordDTOList) {
         return ResponseEntity.ok(recordService.saveRecordList(recordDTOList));
+    }
+
+    @DeleteMapping("/record")
+    public ResponseEntity<?> deleteRecord(@RequestParam long id) {
+        return ResponseEntity.ok(recordService.deleteRecord(id));
     }
 }

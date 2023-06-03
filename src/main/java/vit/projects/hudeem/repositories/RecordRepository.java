@@ -5,5 +5,5 @@ import vit.projects.hudeem.entities.RecordEntity;
 
 import java.time.LocalDate;
 
-public interface RecordRepository extends CrudRepository<RecordEntity, LocalDate> {
+public interface RecordRepository extends CrudRepository<RecordEntity, Long> {
 }
