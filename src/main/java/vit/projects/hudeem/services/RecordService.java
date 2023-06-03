@@ -23,10 +23,9 @@ public class RecordService {
     public String saveRecord(RecordDTO recordDTO) {
         RecordEntity recordEntity = recordMapper.fromDTO(recordDTO);
         UserEntity userEntity = recordEntity.getUser();
-        //new user doesn't have any records
-        if (!CollectionUtils.isEmpty(userEntity.getRecords())
-                && !recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
-            //updating metrics only if record is new
+        //update when new user (doesn't have any records) or the record is the latest
+        if (CollectionUtils.isEmpty(userEntity.getRecords())
+                || !recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
             recordEntity = metricService.getUpdatedWithAllMetrics(recordEntity);
         }
         recordRepository.save(recordEntity);
