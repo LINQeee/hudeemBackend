@@ -55,7 +55,7 @@ public class MetricService {
 
     }
 
-    public RecordEntity getUpdatedWithAllMetrics(RecordEntity recordEntity) {
+    public UserEntity getUpdatedWithAllMetrics(RecordEntity recordEntity) {
         UserEntity userEntity = recordEntity.getUser();
         userEntity.setProgress(getProgress(recordEntity));
         userEntity.setPerDay(getPerDay(recordEntity));
@@ -64,7 +64,6 @@ public class MetricService {
         userEntity.setCurrentWeight(getCurrentWeight(recordEntity));
         userEntity.setWeightLost(getWeightLost(recordEntity));
         userEntity.setWeightLeft(getWeightLeft(recordEntity));
-        recordEntity.setUser(userEntity);
-        return recordEntity;
+        return userEntity;
     }
 }

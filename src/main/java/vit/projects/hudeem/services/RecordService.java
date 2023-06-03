@@ -2,33 +2,29 @@ package vit.projects.hudeem.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import vit.projects.hudeem.dto.RecordDTO;
 import vit.projects.hudeem.entities.RecordEntity;
 import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.mappers.RecordMapper;
 import vit.projects.hudeem.repositories.RecordRepository;
+import vit.projects.hudeem.repositories.UserRepository;
 
-import java.text.DecimalFormat;
 import java.util.Comparator;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RecordService {
     private final RecordRepository recordRepository;
+    private final UserRepository userRepository;
     private final RecordMapper recordMapper;
     private final MetricService metricService;
+    private final RecordValidationService recordValidationService;
 
     public String saveRecord(RecordDTO recordDTO) {
         RecordEntity recordEntity = recordMapper.fromDTO(recordDTO);
-        UserEntity userEntity = recordEntity.getUser();
-        //update when new user (doesn't have any records) or the record is the latest
-        if (CollectionUtils.isEmpty(userEntity.getRecords())
-                || !recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
-            recordEntity = metricService.getUpdatedWithAllMetrics(recordEntity);
-        }
+        recordValidationService.validate(recordEntity);
         recordRepository.save(recordEntity);
+        updateMetricsAndSave(recordEntity.getUser());
         return "successful";
     }
 
@@ -40,7 +36,15 @@ public class RecordService {
     }
 
     public String deleteRecord(long id) {
+        UserEntity userEntity = recordRepository.findById(id).get().getUser();
         recordRepository.deleteById(id);
+        updateMetricsAndSave(userEntity);
         return "successful";
+    }
+
+    private void updateMetricsAndSave(UserEntity userEntity) {
+        RecordEntity latestRecord = getLatestRecord(userEntity);
+        UserEntity updatedUserEntity = metricService.getUpdatedWithAllMetrics(latestRecord);
+        userRepository.save(updatedUserEntity);
     }
 }
