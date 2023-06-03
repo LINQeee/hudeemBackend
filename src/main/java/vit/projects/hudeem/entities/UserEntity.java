@@ -3,6 +3,7 @@ package vit.projects.hudeem.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,10 +12,13 @@ import java.util.List;
 @Table(name = "user")
 public class UserEntity {
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private char gender;
     private double height;
     private double initialWeight;

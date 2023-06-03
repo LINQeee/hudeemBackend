@@ -2,6 +2,7 @@ package vit.projects.hudeem.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import vit.projects.hudeem.dto.RecordDTO;
 import vit.projects.hudeem.entities.RecordEntity;
 import vit.projects.hudeem.entities.UserEntity;
@@ -22,7 +23,10 @@ public class RecordService {
     public String saveRecord(RecordDTO recordDTO) {
         RecordEntity recordEntity = recordMapper.fromDTO(recordDTO);
         UserEntity userEntity = recordEntity.getUser();
-        if (!recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
+        //new user doesn't have any records
+        if (!CollectionUtils.isEmpty(userEntity.getRecords())
+                && !recordEntity.getDate().isBefore(getLatestRecord(userEntity).getDate())) {
+            //updating metrics only if record is new
             recordEntity = metricService.getUpdatedWithAllMetrics(recordEntity);
         }
         recordRepository.save(recordEntity);
