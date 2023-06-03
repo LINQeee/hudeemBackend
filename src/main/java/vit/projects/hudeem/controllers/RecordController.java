@@ -19,11 +19,6 @@ public class RecordController {
         return ResponseEntity.ok(recordService.saveRecord(recordDTO));
     }
 
-    @PostMapping("/recordlist")
-    public ResponseEntity<?> saveRecordList(@RequestBody List<RecordDTO> recordDTOList) {
-        return ResponseEntity.ok(recordService.saveRecordList(recordDTOList));
-    }
-
     @DeleteMapping("/record")
     public ResponseEntity<?> deleteRecord(@RequestParam long id) {
         return ResponseEntity.ok(recordService.deleteRecord(id));

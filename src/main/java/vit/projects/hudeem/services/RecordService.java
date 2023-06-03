@@ -39,11 +39,6 @@ public class RecordService {
                 .get();
     }
 
-    public String saveRecordList(List<RecordDTO> recordDTOList) {
-        recordDTOList.forEach(this::saveRecord);
-        return "successful";
-    }
-
     public String deleteRecord(long id) {
         recordRepository.deleteById(id);
         return "successful";

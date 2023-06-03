@@ -13,10 +13,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Service
 @RequiredArgsConstructor
 public class MetricService {
-    private double getPerDay(RecordEntity recordEntity) {
-        UserEntity userEntity = recordEntity.getUser();
-        long duration = DAYS.between(userEntity.getStartDate(), recordEntity.getDate());
-        double weightDiff = userEntity.getInitialWeight() - getCurrentWeight(recordEntity);
+    private double getPerDay(RecordEntity latestRecord) {
+        UserEntity userEntity = latestRecord.getUser();
+        long duration = DAYS.between(userEntity.getStartDate(), latestRecord.getDate());
+        double weightDiff = userEntity.getInitialWeight() - getCurrentWeight(latestRecord);
         double perDay = weightDiff / duration;
         return Double.parseDouble(new DecimalFormat("#.##").format(perDay));
     }
