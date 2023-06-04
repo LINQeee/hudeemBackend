@@ -39,7 +39,7 @@ public class RecordService {
         UserEntity userEntity = recordRepository.findById(id).get().getUser();
         recordRepository.deleteById(id);
         updateMetricsAndSave(userEntity);
-        return "successful";
+        return "Запись успешно удалена";
     }
 
     private void updateMetricsAndSave(UserEntity userEntity) {

@@ -5,6 +5,7 @@ import vit.projects.hudeem.entities.RecordEntity;
 import vit.projects.hudeem.exceptions.ValidationException;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Service
 public class RecordValidationService {
@@ -15,8 +16,15 @@ public class RecordValidationService {
     }
 
     private void validateExistingDate(RecordEntity toSave) {
-        //validation only for new records
-        if (toSave.getId() != null) {
+        //no validation if we update record without date change
+        if (toSave.getId() != null && toSave.getDate().equals(
+                toSave.getUser().getRecords()
+                        .stream()
+                        .filter(r -> Objects.equals(r.getId(), toSave.getId()))
+                        .findFirst()
+                        .get()
+                        .getDate()
+        )) {
             return;
         }
         boolean isRecordDateExist = toSave.getUser().getRecords()
@@ -28,7 +36,14 @@ public class RecordValidationService {
         }
     }
 
+    private void validateWeight(RecordEntity toSave) {
+        if (toSave.getCurrentWeight() <= 0) {
+            throw new ValidationException("Вы ввели неверный вес");
+        }
+    }
+
     public void validate(RecordEntity toSave) {
+        validateWeight(toSave);
         validateFutureDate(toSave);
         validateExistingDate(toSave);
     }
