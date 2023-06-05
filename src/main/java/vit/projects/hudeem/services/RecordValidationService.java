@@ -38,7 +38,7 @@ public class RecordValidationService {
 
     private void validateWeight(RecordEntity toSave) {
         if (toSave.getCurrentWeight() <= 0) {
-            throw new ValidationException("Вы ввели неверный вес");
+            throw new ValidationException("Введите корректное значение веса");
         }
     }
 
