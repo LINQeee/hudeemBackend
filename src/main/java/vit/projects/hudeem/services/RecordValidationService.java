@@ -23,17 +23,17 @@ public class RecordValidationService {
                         .filter(r -> Objects.equals(r.getId(), toSave.getId()))
                         .findFirst()
                         .get()
-                        .getDate()
-        )) {
+                        .getDate())) {
             return;
         }
-        boolean isRecordDateExist = toSave.getUser().getRecords()
-                .stream().
-                anyMatch(entity -> toSave.getDate().equals(entity.getDate()));
-        //new record cannot be saved with existing date
-        if (isRecordDateExist) {
-            throw new ValidationException("Запись с указанной датой уже существует");
-        }
+
+        toSave.getUser().getRecords()
+                .stream()
+                .filter(entity -> toSave.getDate().equals(entity.getDate()))
+                .findAny()
+                .ifPresent(entity -> {
+                    throw new ValidationException("Запись с указанной датой уже существует");
+                });
     }
 
     private void validateWeight(RecordEntity toSave) {
