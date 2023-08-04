@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import vit.projects.hudeem.dto.RecordDTO;
 import vit.projects.hudeem.dto.SummaryDTO;
 import vit.projects.hudeem.dto.UserDTO;
-import vit.projects.hudeem.entities.RecordEntity;
 import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.mappers.RecordMapper;
 import vit.projects.hudeem.mappers.UserMapper;

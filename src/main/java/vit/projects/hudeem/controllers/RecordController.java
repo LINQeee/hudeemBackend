@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import vit.projects.hudeem.dto.RecordDTO;
 import vit.projects.hudeem.services.RecordService;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
