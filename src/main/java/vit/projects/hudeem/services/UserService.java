@@ -45,4 +45,8 @@ public class UserService {
         return SummaryDTO.builder().userDTO(userDTO).recordDTOList(recordDTOList).build();
     }
 
+    public List<UserEntity> getAll() {
+        return userRepository.findAll();
+    }
+
 }

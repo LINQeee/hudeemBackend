@@ -44,4 +44,4 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-test.onlyIf {false}
+//test.onlyIf {false}
