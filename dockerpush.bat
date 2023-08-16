@@ -1,4 +1,4 @@
-cd C:\Users\vitga\IdeaProjects\hudeem
+cd E:\Projects\VitRepo\hudeem
 call gradlew build
-call docker build -t vitgavrilchenko/hudeem-image .
-call docker push vitgavrilchenko/hudeem-image
+call docker build -t adrianvved/hudeem-backend .
+call docker push adrianvved/hudeem-backend
