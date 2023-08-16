@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   server:
-    image: vitgavrilchenko/hudeem-image
+    image: adrianvved/hudeem-backend
     ports:
       - 9092:9090
     depends_on:

@@ -1,3 +1,6 @@
+*.crt
+*.key
+
 HELP.md
 .gradle
 build/
