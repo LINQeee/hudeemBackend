@@ -1,10 +1,8 @@
 package vit.projects.hudeem.entities;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,8 +25,7 @@ public class UserEntity {
     private double initialWeight;
     private double goalWeight;
     private double progress;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-
+    @OneToMany(mappedBy = "user")
     private List<RecordEntity> records;
     private LocalDate startDate;
     private double perDay;
