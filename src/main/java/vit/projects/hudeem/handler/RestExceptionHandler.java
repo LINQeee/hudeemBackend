@@ -14,12 +14,19 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     protected ResponseEntity<Object> handleException(Exception ex) {
         log.error(ex.getMessage());
-        return ResponseEntity.internalServerError().body(ErrorDTO.builder().type("UNEXPECTED").msg(ex.getMessage()).build());
+        return ResponseEntity.internalServerError().body(ErrorDTO.builder()
+                .type("UNEXPECTED")
+                .msg(ex.getMessage())
+                .build());
     }
 
     @ExceptionHandler(value = ValidationException.class)
     protected ResponseEntity<Object> handleException(ValidationException ex) {
         log.error(ex.getMessage());
-        return ResponseEntity.internalServerError().body(ErrorDTO.builder().type("VALIDATION").msg(ex.getMessage()).build());
+        return ResponseEntity.internalServerError().body(ErrorDTO.builder()
+                .type("VALIDATION")
+                .msg(ex.getMessage())
+                .inputFieldType(ex.getFieldType())
+                .build());
     }
 }

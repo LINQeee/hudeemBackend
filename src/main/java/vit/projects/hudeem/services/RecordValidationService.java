@@ -3,6 +3,7 @@ package vit.projects.hudeem.services;
 import org.springframework.stereotype.Service;
 import vit.projects.hudeem.entities.RecordEntity;
 import vit.projects.hudeem.exceptions.ValidationException;
+import vit.projects.hudeem.utils.InputFieldType;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
 public class RecordValidationService {
     private void validateFutureDate(RecordEntity toSave) {
         if (toSave.getDate().isAfter(LocalDate.now())) {
-            throw new ValidationException("Нельзя сохранить запись с датой в будущем");
+            throw new ValidationException("Нельзя сохранить запись с датой в будущем", InputFieldType.DATE);
         }
     }
 
@@ -32,13 +33,13 @@ public class RecordValidationService {
                 .filter(entity -> toSave.getDate().equals(entity.getDate()))
                 .findAny()
                 .ifPresent(entity -> {
-                    throw new ValidationException("Запись с указанной датой уже существует");
+                    throw new ValidationException("Запись с указанной датой уже существует", InputFieldType.DATE);
                 });
     }
 
     private void validateWeight(RecordEntity toSave) {
         if (toSave.getCurrentWeight() <= 0) {
-            throw new ValidationException("Введите корректное значение веса");
+            throw new ValidationException("Введите корректное значение веса", InputFieldType.WEIGHT);
         }
     }
 
