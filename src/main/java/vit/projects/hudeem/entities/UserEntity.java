@@ -1,10 +1,8 @@
 package vit.projects.hudeem.entities;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,17 +16,21 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
+    private String email;
+    @Column(nullable = false)
     private String username;
     @Column(nullable = false)
-    private String password;
+    private String passwordHash;
     @Column(nullable = false)
     private char gender;
+    @Column(nullable = false)
     private double height;
+    @Column(nullable = false)
+    private int age;
     private double initialWeight;
     private double goalWeight;
     private double progress;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<RecordEntity> records;
     private LocalDate startDate;
     private double perDay;
@@ -37,5 +39,8 @@ public class UserEntity {
     private double currentWeight;
     private double weightLost;
     private double weightLeft;
-
+    private String codeHash;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<IpEntity> ips;
+    private LocalDate expireAuthorisationDate;
 }

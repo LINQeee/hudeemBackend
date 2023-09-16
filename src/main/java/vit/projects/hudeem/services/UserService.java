@@ -2,13 +2,18 @@ package vit.projects.hudeem.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import vit.projects.hudeem.dto.IpDTO;
 import vit.projects.hudeem.dto.RecordDTO;
 import vit.projects.hudeem.dto.SummaryDTO;
 import vit.projects.hudeem.dto.UserDTO;
 import vit.projects.hudeem.entities.UserEntity;
+import vit.projects.hudeem.exceptions.ValidationException;
+import vit.projects.hudeem.mappers.IpMapper;
 import vit.projects.hudeem.mappers.RecordMapper;
 import vit.projects.hudeem.mappers.UserMapper;
+import vit.projects.hudeem.repositories.IpRepository;
 import vit.projects.hudeem.repositories.UserRepository;
+import vit.projects.hudeem.utils.InputFieldType;
 
 import java.util.Comparator;
 import java.util.List;
@@ -19,10 +24,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RecordMapper recordMapper;
+    private final IpMapper ipMapper;
+    private final IpRepository ipRepository;
 
     public UserDTO saveUser(UserDTO userDTO) {
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent())
+            throw new ValidationException("Этот email занят", InputFieldType.EMAIL);
+
         UserEntity userEntity = userMapper.fromDTO(userDTO);
         UserEntity saved = userRepository.save(userEntity);
+        IpDTO ipDTO = new IpDTO(saved.getId(), userDTO.getIp());
+        ipRepository.save(ipMapper.fromDTO(ipDTO));
         return userMapper.toDTO(saved);
     }
 
@@ -42,7 +54,15 @@ public class UserService {
                 })
                 .sorted(Comparator.comparing(RecordDTO::getDate))
                 .toList();
-        return SummaryDTO.builder().userDTO(userDTO).recordDTOList(recordDTOList).build();
+        List<IpDTO> ipDTOList = userEntity.getIps()
+                .stream()
+                .map(ipEntity -> {
+                    var dto = ipMapper.toDTO(ipEntity);
+                    dto.setUserId(id);
+                    return dto;
+                        })
+                .toList();
+        return SummaryDTO.builder().userDTO(userDTO).recordDTOList(recordDTOList).ipDTOList(ipDTOList).build();
     }
 
     public List<UserEntity> getAll() {
