@@ -64,9 +64,4 @@ public class UserService {
                 .toList();
         return SummaryDTO.builder().userDTO(userDTO).recordDTOList(recordDTOList).ipDTOList(ipDTOList).build();
     }
-
-    public List<UserEntity> getAll() {
-        return userRepository.findAll();
-    }
-
 }

@@ -1,7 +1,6 @@
 package vit.projects.hudeem.entities;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 

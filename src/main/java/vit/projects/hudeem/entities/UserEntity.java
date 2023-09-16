@@ -30,7 +30,7 @@ public class UserEntity {
     private double initialWeight;
     private double goalWeight;
     private double progress;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private List<RecordEntity> records;
     private LocalDate startDate;
     private double perDay;
