@@ -16,12 +16,17 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
+    private String email;
+    @Column(nullable = false)
     private String username;
     @Column(nullable = false)
-    private String password;
+    private String passwordHash;
     @Column(nullable = false)
     private char gender;
+    @Column(nullable = false)
     private double height;
+    @Column(nullable = false)
+    private int age;
     private double initialWeight;
     private double goalWeight;
     private double progress;
@@ -34,5 +39,8 @@ public class UserEntity {
     private double currentWeight;
     private double weightLost;
     private double weightLeft;
-
+    private String codeHash;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<IpEntity> ips;
+    private LocalDate expireAuthorisationDate;
 }

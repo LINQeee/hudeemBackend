@@ -1,5 +1,7 @@
 *.crt
 *.key
+logs
+*.log
 
 HELP.md
 .gradle
@@ -38,3 +40,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/logs/

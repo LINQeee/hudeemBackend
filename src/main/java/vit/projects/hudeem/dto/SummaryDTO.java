@@ -10,4 +10,5 @@ import java.util.List;
 public class SummaryDTO {
     private UserDTO userDTO;
     private List<RecordDTO> recordDTOList;
+    private List<IpDTO> ipDTOList;
 }
