@@ -37,7 +37,7 @@ public class CodeService {
         if (codeHash.equals(userEntity.getCodeHash())) {
 
             if (userDTO.isRememberMe())
-                userEntity.setExpireAuthorisationDate(LocalDate.now().plusDays(7));
+                userEntity.setExpireAuthorisationDate(LocalDate.now().plusDays(30));
             else
                 userEntity.setExpireAuthorisationDate(LocalDate.now());
             userRepository.save(userEntity);
