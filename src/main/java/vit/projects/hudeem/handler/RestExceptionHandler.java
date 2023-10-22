@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import vit.projects.hudeem.dto.ErrorDTO;
+import vit.projects.hudeem.exceptions.AuthorizationException;
 import vit.projects.hudeem.exceptions.ValidationException;
+
+import javax.naming.AuthenticationException;
 
 @ControllerAdvice
 @Slf4j
@@ -27,6 +30,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .type("VALIDATION")
                 .msg(ex.getMessage())
                 .inputFieldType(ex.getFieldType())
+                .build());
+    }
+
+    @ExceptionHandler(value = AuthenticationException.class)
+    protected ResponseEntity<Object> handleException(AuthorizationException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.internalServerError().body(ErrorDTO.builder()
+                .type("AUTHORIZATION")
+                .msg(ex.getMessage())
                 .build());
     }
 }

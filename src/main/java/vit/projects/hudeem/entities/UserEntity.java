@@ -17,15 +17,11 @@ public class UserEntity {
     private Long id;
     @Column(nullable = false)
     private String email;
-    @Column(nullable = false)
     private String username;
     @Column(nullable = false)
     private String passwordHash;
-    @Column(nullable = false)
     private char gender;
-    @Column(nullable = false)
     private double height;
-    @Column(nullable = false)
     private int age;
     private double initialWeight;
     private double goalWeight;
@@ -43,4 +39,12 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<IpEntity> ips;
     private LocalDate expireAuthorisationDate;
+
+    public boolean containsIp(String ip){
+        boolean isContains = false;
+        for (IpEntity ipEntity : ips){
+            if (ipEntity.getIp().equals(ip)) isContains = true;
+        }
+        return isContains;
+    }
 }

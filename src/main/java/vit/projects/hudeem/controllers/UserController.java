@@ -18,8 +18,20 @@ public class UserController {
         return ResponseEntity.ok(userService.saveUser(userDTO));
     }
 
+    @PostMapping("/user-bio")
+    public ResponseEntity<?> updateUserBio(@RequestBody UserDTO userDTO){
+        userService.updateUserBio(userDTO);
+        return ResponseEntity.ok("success");
+    }
+
     @GetMapping("/summary")
     public ResponseEntity<?> getUserInfo(@RequestParam Long id) {
         return ResponseEntity.ok(userService.getSummary(id));
+    }
+
+    @PostMapping("user-login")
+    public ResponseEntity<?> userLogin(@RequestBody UserDTO userDTO){
+        userService.checkIsUserAbleToLogin(userDTO);
+        return ResponseEntity.ok("success");
     }
 }
