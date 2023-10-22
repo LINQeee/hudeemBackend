@@ -15,7 +15,6 @@ public abstract class IpMapper {
     @Mapping(target = "user", expression = "java(getUser(ipDTO.getUserId()))")
     public abstract IpEntity fromDTO(IpDTO ipDTO);
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "id", ignore = true)
     public abstract IpDTO toDTO(IpEntity entity);
 
     public UserEntity getUser(Long id) {
