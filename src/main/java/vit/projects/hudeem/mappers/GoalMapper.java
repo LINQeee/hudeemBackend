@@ -11,6 +11,7 @@ import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.repositories.RecordRepository;
 import vit.projects.hudeem.repositories.UserRepository;
 
+import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
@@ -41,6 +42,6 @@ public abstract class GoalMapper {
             var dto = recordMapper.toDTO(recordEntity);
             dto.setGoalId(goalId);
             return dto;
-        }).toList();
+        }).sorted(Comparator.comparing(RecordDTO::getDate)).toList();
     }
 }

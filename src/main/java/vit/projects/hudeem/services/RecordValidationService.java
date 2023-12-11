@@ -12,7 +12,7 @@ import java.util.Objects;
 public class RecordValidationService {
     private void validateFutureDate(RecordEntity toSave) {
         if (toSave.getDate().isAfter(LocalDate.now())) {
-            throw new ValidationException("Нельзя сохранить запись с датой в будущем", InputFieldType.DATE);
+            throw new ValidationException("Нельзя использовать дату из будущего!", InputFieldType.DATE);
         }
     }
 
@@ -33,13 +33,19 @@ public class RecordValidationService {
                 .filter(entity -> toSave.getDate().equals(entity.getDate()))
                 .findAny()
                 .ifPresent(entity -> {
-                    throw new ValidationException("Запись с указанной датой уже существует", InputFieldType.DATE);
+                    throw new ValidationException("Запись с указанной датой уже существует!", InputFieldType.DATE);
                 });
+    }
+
+    private void validateDateBeforeStart(RecordEntity toSave) {
+        if (toSave.getDate().isBefore(toSave.getGoal().getStartDate())) {
+            throw new ValidationException("Нельзя указать дату до старта цели!", InputFieldType.DATE);
+        }
     }
 
     private void validateWeight(RecordEntity toSave) {
         if (toSave.getCurrentWeight() <= 0) {
-            throw new ValidationException("Введите корректное значение веса", InputFieldType.WEIGHT);
+            throw new ValidationException("Введите корректное значение веса!", InputFieldType.WEIGHT);
         }
     }
 
@@ -47,5 +53,6 @@ public class RecordValidationService {
         validateWeight(toSave);
         validateFutureDate(toSave);
         validateExistingDate(toSave);
+        validateDateBeforeStart(toSave);
     }
 }
