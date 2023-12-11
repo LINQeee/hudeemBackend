@@ -8,10 +8,11 @@ import vit.projects.hudeem.entities.IpEntity;
 import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.repositories.UserRepository;
 
+@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @Mapper(componentModel = "spring")
 public abstract class IpMapper {
     @Autowired
-    UserRepository userRepository;
+    public UserRepository userRepository;
     @Mapping(target = "user", expression = "java(getUser(ipDTO.getUserId()))")
     public abstract IpEntity fromDTO(IpDTO ipDTO);
     @Mapping(target = "userId", source = "user.id")

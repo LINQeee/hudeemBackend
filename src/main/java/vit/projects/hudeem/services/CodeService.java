@@ -56,6 +56,4 @@ public class CodeService {
         InputStream inputStream = getClass().getResourceAsStream("/emails/codeVerificationEmail.html");
         return fileService.readFromInputStream(inputStream).replace("CODE", code);
     }
-
-
 }

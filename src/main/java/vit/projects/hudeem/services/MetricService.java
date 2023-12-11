@@ -2,8 +2,8 @@ package vit.projects.hudeem.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import vit.projects.hudeem.entities.GoalEntity;
 import vit.projects.hudeem.entities.RecordEntity;
-import vit.projects.hudeem.entities.UserEntity;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -14,16 +14,17 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @RequiredArgsConstructor
 public class MetricService {
     private double getPerDay(RecordEntity latestRecord) {
-        UserEntity userEntity = latestRecord.getUser();
-        long duration = DAYS.between(userEntity.getStartDate(), latestRecord.getDate());
-        double weightDiff = userEntity.getInitialWeight() - getCurrentWeight(latestRecord);
+        GoalEntity goalEntity = latestRecord.getGoal();
+        long duration = DAYS.between(goalEntity.getStartDate(), latestRecord.getDate());
+        double weightDiff = goalEntity.getInitialWeight() - getCurrentWeight(latestRecord);
         double perDay = weightDiff / duration;
-        return Double.parseDouble(new DecimalFormat("#.##").format(perDay));
+
+        return Double.parseDouble(new DecimalFormat("#.##").format(perDay).replace(",", "."));
     }
 
     private double getPerWeek(RecordEntity recordEntity) {
         double perWeek = getPerDay(recordEntity) * 7;
-        return Double.parseDouble(new DecimalFormat("#.##").format(perWeek));
+        return Double.parseDouble(new DecimalFormat("#.##").format(perWeek).replace(",", "."));
     }
 
     private LocalDate getPlannedDate(RecordEntity recordEntity) {
@@ -33,37 +34,37 @@ public class MetricService {
 
     private double getCurrentWeight(RecordEntity recordEntity) {
         double current = recordEntity.getCurrentWeight();
-        return Double.parseDouble(new DecimalFormat("#.##").format(current));
+        return Double.parseDouble(new DecimalFormat("#.##").format(current).replace(",", "."));
     }
 
     private double getWeightLost(RecordEntity recordEntity) {
-        double lost = recordEntity.getUser().getInitialWeight() - recordEntity.getCurrentWeight();
-        return Double.parseDouble(new DecimalFormat("#.##").format(lost));
+        double lost = recordEntity.getGoal().getInitialWeight() - recordEntity.getCurrentWeight();
+        return Double.parseDouble(new DecimalFormat("#.##").format(lost).replace(",", "."));
     }
 
     private double getWeightLeft(RecordEntity recordEntity) {
-        double left = recordEntity.getCurrentWeight() - recordEntity.getUser().getGoalWeight();
-        return Double.parseDouble(new DecimalFormat("#.##").format(left));
+        double left = recordEntity.getCurrentWeight() - recordEntity.getGoal().getGoalWeight();
+        return Double.parseDouble(new DecimalFormat("#.##").format(left).replace(",", "."));
     }
 
     private double getProgress(RecordEntity recordEntity) {
-        UserEntity userEntity = recordEntity.getUser();
-        double current = userEntity.getInitialWeight() - recordEntity.getCurrentWeight();
-        double total = userEntity.getInitialWeight() - userEntity.getGoalWeight();
+        GoalEntity goalEntity = recordEntity.getGoal();
+        double current = goalEntity.getInitialWeight() - recordEntity.getCurrentWeight();
+        double total = goalEntity.getInitialWeight() - goalEntity.getGoalWeight();
         double progress = current / total;
-        return Double.parseDouble(new DecimalFormat("#.##").format(progress));
+        return Double.parseDouble(new DecimalFormat("#.##").format(progress).replace(",", "."));
 
     }
 
-    public UserEntity getUpdatedWithAllMetrics(RecordEntity recordEntity) {
-        UserEntity userEntity = recordEntity.getUser();
-        userEntity.setProgress(getProgress(recordEntity));
-        userEntity.setPerDay(getPerDay(recordEntity));
-        userEntity.setPerWeek(getPerWeek(recordEntity));
-        userEntity.setPlannedDate(getPlannedDate(recordEntity));
-        userEntity.setCurrentWeight(getCurrentWeight(recordEntity));
-        userEntity.setWeightLost(getWeightLost(recordEntity));
-        userEntity.setWeightLeft(getWeightLeft(recordEntity));
-        return userEntity;
+    public GoalEntity getUpdatedWithAllMetrics(RecordEntity recordEntity) {
+        GoalEntity goalEntity = recordEntity.getGoal();
+        goalEntity.setProgress(getProgress(recordEntity));
+        goalEntity.setPerDay(getPerDay(recordEntity));
+        goalEntity.setPerWeek(getPerWeek(recordEntity));
+        goalEntity.setPlannedDate(getPlannedDate(recordEntity));
+        goalEntity.setCurrentWeight(getCurrentWeight(recordEntity));
+        goalEntity.setWeightLost(getWeightLost(recordEntity));
+        goalEntity.setWeightLeft(getWeightLeft(recordEntity));
+        return goalEntity;
     }
 }

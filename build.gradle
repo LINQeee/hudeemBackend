@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.6.0'
 	implementation 'com.mailgun:mailgun-java:1.0.8'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -43,7 +44,6 @@ dependencies {
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
 }
 
-test.onlyIf {false}
+//test.onlyIf {false}

@@ -21,7 +21,6 @@ public class RecordEntity {
     private LocalDate date;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
+    @JoinColumn(name = "goal_id", nullable = false)
+    private GoalEntity goal;
 }

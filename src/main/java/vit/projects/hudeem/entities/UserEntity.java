@@ -23,28 +23,14 @@ public class UserEntity {
     private char gender;
     private double height;
     private int age;
-    private double initialWeight;
-    private double goalWeight;
-    private double progress;
-    @OneToMany(mappedBy = "user")
-    private List<RecordEntity> records;
-    private LocalDate startDate;
-    private double perDay;
-    private double perWeek;
-    private LocalDate plannedDate;
-    private double currentWeight;
-    private double weightLost;
-    private double weightLeft;
     private String codeHash;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private List<IpEntity> ips;
+    @OneToMany(mappedBy = "user")
+    private List<GoalEntity> goals;
     private LocalDate expireAuthorisationDate;
 
     public boolean containsIp(String ip){
-        boolean isContains = false;
-        for (IpEntity ipEntity : ips){
-            if (ipEntity.getIp().equals(ip)) isContains = true;
-        }
-        return isContains;
+        return ips.stream().anyMatch(ipEntity -> ipEntity.getIp().equals(ip));
     }
 }

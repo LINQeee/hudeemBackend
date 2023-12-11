@@ -29,7 +29,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getSummary(id));
     }
 
-    @PostMapping("user-login")
+    @PostMapping("/user-login")
     public ResponseEntity<?> userLogin(@RequestBody UserDTO userDTO){
         userService.checkIsUserAbleToLogin(userDTO);
         return ResponseEntity.ok("success");

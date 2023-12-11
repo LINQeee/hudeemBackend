@@ -12,6 +12,7 @@ public class FileService {
 
     @SneakyThrows
     public String readFromInputStream(InputStream inputStream) {
+        if (inputStream == null) throw new RuntimeException("Empty InputStream");
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;

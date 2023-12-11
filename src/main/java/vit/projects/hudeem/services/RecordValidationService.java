@@ -19,7 +19,7 @@ public class RecordValidationService {
     private void validateExistingDate(RecordEntity toSave) {
         //no validation if we update record without date change
         if (toSave.getId() != null && toSave.getDate().equals(
-                toSave.getUser().getRecords()
+                toSave.getGoal().getRecords()
                         .stream()
                         .filter(r -> Objects.equals(r.getId(), toSave.getId()))
                         .findFirst()
@@ -28,7 +28,7 @@ public class RecordValidationService {
             return;
         }
 
-        toSave.getUser().getRecords()
+        toSave.getGoal().getRecords()
                 .stream()
                 .filter(entity -> toSave.getDate().equals(entity.getDate()))
                 .findAny()
