@@ -9,5 +9,5 @@ public class RecordDTO {
     private Long id;
     private double currentWeight;
     private LocalDate date;
-    private Long userId;
+    private Long goalId;
 }

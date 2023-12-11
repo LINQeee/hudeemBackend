@@ -9,6 +9,6 @@ import java.util.List;
 @Builder
 public class SummaryDTO {
     private UserDTO userDTO;
-    private List<RecordDTO> recordDTOList;
     private List<IpDTO> ipDTOList;
+    private List<GoalDTO> goalDTOList;
 }

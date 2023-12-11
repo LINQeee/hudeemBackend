@@ -7,11 +7,12 @@ import vit.projects.hudeem.dto.UserDTO;
 import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.services.HashService;
 
+@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
     @Autowired
-    HashService hashService;
+    public HashService hashService;
 
     @Mapping(target = "passwordHash", expression = "java(hashService.getHashFrom(userDTO.getPassword()))")
     @Mapping(target = "codeHash", expression = "java(hashService.getHashFrom(userDTO.getCode()))")

@@ -21,4 +21,6 @@ public class RecordController {
     public ResponseEntity<?> deleteRecord(@RequestParam long id) {
         return ResponseEntity.ok(recordService.deleteRecord(id));
     }
+
+
 }
