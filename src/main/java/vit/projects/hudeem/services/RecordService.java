@@ -11,6 +11,7 @@ import vit.projects.hudeem.repositories.RecordRepository;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +30,10 @@ public class RecordService {
         return "successful";
     }
 
-    private RecordEntity getLatestRecord(GoalEntity goalEntity) {
+    private Optional<RecordEntity> getLatestRecord(GoalEntity goalEntity) {
         return goalEntity.getRecords()
                 .stream()
-                .max(Comparator.comparing(RecordEntity::getDate))
-                .get();
+                .max(Comparator.comparing(RecordEntity::getDate));
     }
 
     public void deleteRecordsByGoalId(Long goalId) {
@@ -49,8 +49,10 @@ public class RecordService {
     }
 
     private void updateMetricsAndSave(GoalEntity goalEntity) {
-        RecordEntity latestRecord = getLatestRecord(goalEntity);
-        GoalEntity updatedGoalEntity = metricService.getUpdatedWithAllMetrics(latestRecord);
+        Optional<RecordEntity> optionalLatestRecord = getLatestRecord(goalEntity);
+        GoalEntity updatedGoalEntity = optionalLatestRecord.isPresent() ?
+                metricService.getUpdatedWithAllMetrics(optionalLatestRecord.get()) :
+                metricService.resetMetrics(goalEntity);
         goalRepository.save(updatedGoalEntity);
     }
 }

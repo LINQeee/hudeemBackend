@@ -34,4 +34,6 @@ public class GoalEntity {
     private double weightLeft;
     @OneToMany(mappedBy = "goal")
     private List<RecordEntity> records;
+    private int perDayProgress;
+    private int perWeekProgress;
 }

@@ -20,4 +20,6 @@ public class GoalDTO {
     private double weightLeft;
     private Long userId;
     private List<RecordDTO> recordDTOList;
+    private int perDayProgress;
+    private int perWeekProgress;
 }
