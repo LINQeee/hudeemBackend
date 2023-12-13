@@ -33,7 +33,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .build());
     }
 
-    @ExceptionHandler(value = AuthenticationException.class)
+    @ExceptionHandler(value = AuthorizationException.class)
     protected ResponseEntity<Object> handleException(AuthorizationException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.internalServerError().body(ErrorDTO.builder()

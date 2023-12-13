@@ -38,10 +38,14 @@ public abstract class GoalMapper {
     public List<RecordDTO> getDTOs(Long goalId) {
         List<RecordEntity> recordEntities = recordRepository.findAllByGoalId(goalId).get();
 
-        return recordEntities.stream().map(recordEntity -> {
+        return recordEntities
+                .stream()
+                .map(recordEntity -> {
             var dto = recordMapper.toDTO(recordEntity);
             dto.setGoalId(goalId);
             return dto;
-        }).sorted(Comparator.comparing(RecordDTO::getDate)).toList();
+        })
+                .sorted(Comparator.comparing(RecordDTO::getDate))
+                .toList();
     }
 }

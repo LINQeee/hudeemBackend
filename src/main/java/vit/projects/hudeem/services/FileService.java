@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 @Service
 public class FileService {
 
     @SneakyThrows
     public String readFromInputStream(InputStream inputStream) {
+        //Optional.ofNullable(inputStream).orElseThrow(() -> new RuntimeException("Empty InputStream"));
         if (inputStream == null) throw new RuntimeException("Empty InputStream");
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -20,6 +22,7 @@ public class FileService {
                 resultStringBuilder.append(line).append("\n");
             }
         }
+        inputStream.close();
         return resultStringBuilder.toString();
     }
 }
