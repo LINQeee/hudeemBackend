@@ -38,7 +38,7 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public void checkIsUserAbleToLogin(UserDTO userDTO) {
+    public String checkIsUserAbleToLogin(UserDTO userDTO) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(userDTO.getEmail());
         if (userEntityOptional.isEmpty() || !userDTO.getPassword().equals(userEntityOptional.get().getPasswordHash()))
             throw new AuthorizationException("Неправильная почта или пароль");
@@ -47,6 +47,8 @@ public class UserService {
             throw new AuthorizationException("Срок авторизации истёк");
         if (userEntity.getIps() == null || !userEntity.containsIp(userDTO.getIp()))
             throw new AuthorizationException("Неавторизованное устройство");
+
+        return userEntity.getCodeHash();
     }
 
     public UserDTO saveUser(UserDTO userDTO) {
