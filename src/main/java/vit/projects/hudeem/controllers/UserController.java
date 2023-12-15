@@ -31,7 +31,7 @@ public class UserController {
 
     @PostMapping("/user-login")
     public ResponseEntity<?> userLogin(@RequestBody UserDTO userDTO){
-        userService.checkIsUserAbleToLogin(userDTO);
-        return ResponseEntity.ok("success");
+
+        return ResponseEntity.ok(userService.checkIsUserAbleToLogin(userDTO));
     }
 }
