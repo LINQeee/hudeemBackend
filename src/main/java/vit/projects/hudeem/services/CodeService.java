@@ -41,7 +41,7 @@ public class CodeService {
             else
                 userEntity.setExpireAuthorisationDate(LocalDate.now());
             userRepository.save(userEntity);
-            return ResponseEntity.ok(new UserDTO(userEntity.getEmail(), userEntity.getPasswordHash()));
+            return ResponseEntity.ok(new UserDTO(userEntity.getEmail(), userEntity.getCodeHash()));
         } else return ResponseEntity.status(500).body("Неверный код");
     }
 
