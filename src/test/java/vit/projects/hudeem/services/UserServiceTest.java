@@ -93,7 +93,7 @@ class UserServiceTest {
 
         Mockito.when(userRepository.findByEmail("email")).thenReturn(Optional.of(userEntity));
 
-        assertDoesNotThrow(() -> userService.checkIsUserAbleToLogin(userDTO));
+        assertDoesNotThrow(() -> userService.checkLoginAbilityWithPsw(userDTO));
     }
 
     @Test
@@ -107,13 +107,13 @@ class UserServiceTest {
 
         Mockito.when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
 
-        Assertions.assertThatThrownBy(() -> userService.checkIsUserAbleToLogin(userDTO))
+        Assertions.assertThatThrownBy(() -> userService.checkLoginAbilityWithPsw(userDTO))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("Неправильная почта или пароль");
 
         Mockito.when(userRepository.findByEmail("email")).thenReturn(Optional.of(userEntity));
 
-        Assertions.assertThatThrownBy(() -> userService.checkIsUserAbleToLogin(userDTO))
+        Assertions.assertThatThrownBy(() -> userService.checkLoginAbilityWithPsw(userDTO))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("Неправильная почта или пароль");
     }
@@ -130,13 +130,13 @@ class UserServiceTest {
 
         Mockito.when(userRepository.findByEmail("email")).thenReturn(Optional.of(userEntity));
 
-        Assertions.assertThatThrownBy(() -> userService.checkIsUserAbleToLogin(userDTO))
+        Assertions.assertThatThrownBy(() -> userService.checkLoginAbilityWithPsw(userDTO))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("Срок авторизации истёк");
 
         userEntity.setExpireAuthorisationDate(LocalDate.now().minusDays(1));
 
-        Assertions.assertThatThrownBy(() -> userService.checkIsUserAbleToLogin(userDTO))
+        Assertions.assertThatThrownBy(() -> userService.checkLoginAbilityWithPsw(userDTO))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("Срок авторизации истёк");
     }
@@ -158,13 +158,13 @@ class UserServiceTest {
 
         Mockito.when(userRepository.findByEmail("email")).thenReturn(Optional.of(userEntity));
 
-        Assertions.assertThatThrownBy(() -> userService.checkIsUserAbleToLogin(userDTO))
+        Assertions.assertThatThrownBy(() -> userService.checkLoginAbilityWithPsw(userDTO))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("Неавторизованное устройство");
 
         userEntity.setIps(List.of(ip));
 
-        Assertions.assertThatThrownBy(() -> userService.checkIsUserAbleToLogin(userDTO))
+        Assertions.assertThatThrownBy(() -> userService.checkLoginAbilityWithPsw(userDTO))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("Неавторизованное устройство");
     }

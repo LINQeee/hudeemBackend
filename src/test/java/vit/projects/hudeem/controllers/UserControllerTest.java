@@ -80,6 +80,6 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(userDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        Mockito.verify(userService).checkIsUserAbleToLogin(userDTO);
+        Mockito.verify(userService).checkLoginAbilityWithPsw(userDTO);
     }
 }

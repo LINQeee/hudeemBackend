@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping("/user-bio")
-    public ResponseEntity<?> updateUserBio(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> updateUserBio(@RequestBody UserDTO userDTO) {
         userService.updateUserBio(userDTO);
         return ResponseEntity.ok("success");
     }
@@ -29,9 +29,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getSummary(id));
     }
 
-    @PostMapping("/user-login")
-    public ResponseEntity<?> userLogin(@RequestBody UserDTO userDTO){
+    @PostMapping("/user-login-psw")
+    public ResponseEntity<?> userLoginPsw(@RequestBody UserDTO userDTO) {
 
-        return ResponseEntity.ok(userService.checkIsUserAbleToLogin(userDTO));
+        return ResponseEntity.ok(userService.checkLoginAbilityWithPsw(userDTO));
+    }
+
+    @PostMapping("/user-login-code")
+    public ResponseEntity<?> userLoginCode(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.checkLoginAbilityWithCode(userDTO));
     }
 }
