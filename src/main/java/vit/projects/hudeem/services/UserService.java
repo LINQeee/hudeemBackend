@@ -24,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RecordMapper recordMapper;
+    private final HashService hashService;
     private final GoalMapper goalMapper;
     private final IpMapper ipMapper;
     private final IpRepository ipRepository;
@@ -40,7 +41,12 @@ public class UserService {
 
     public String checkIsUserAbleToLogin(UserDTO userDTO) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(userDTO.getEmail());
-        if (userEntityOptional.isEmpty() || !userDTO.getPassword().equals(userEntityOptional.get().getPasswordHash()))
+
+        boolean isPasswordOrLoginCorrect = userEntityOptional.isEmpty() || (userDTO.getPassword() != null ?
+                !hashService.getHashFrom(userDTO.getPassword()).equals(userEntityOptional.get().getPasswordHash()) :
+                !userDTO.getCode().equals(userEntityOptional.get().getCodeHash()));
+
+        if (isPasswordOrLoginCorrect)
             throw new AuthorizationException("Неправильная почта или пароль");
         UserEntity userEntity = userEntityOptional.get();
         if (userEntity.getExpireAuthorisationDate() == null || LocalDate.now().isAfter(userEntity.getExpireAuthorisationDate()))
@@ -48,7 +54,7 @@ public class UserService {
         if (userEntity.getIps() == null || !userEntity.containsIp(userDTO.getIp()))
             throw new AuthorizationException("Неавторизованное устройство");
 
-        return userEntity.getCodeHash();
+        return "success";
     }
 
     public UserDTO saveUser(UserDTO userDTO) {
