@@ -30,7 +30,7 @@ public class UserService {
     private final IpRepository ipRepository;
 
     public void updateUserBio(UserDTO userDTO) {
-        checkIsUserAbleToLogin(userDTO);
+        checkLoginAbilityWithPsw(userDTO);
         UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).get();
         userEntity.setUsername(userDTO.getUsername());
         userEntity.setGender(userDTO.getGender());
@@ -39,15 +39,20 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public String checkIsUserAbleToLogin(UserDTO userDTO) {
+    public String checkLoginAbilityWithPsw(UserDTO userDTO) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(userDTO.getEmail());
 
-        boolean isPasswordOrLoginCorrect = userEntityOptional.isEmpty() || (userDTO.getPassword() != null ?
-                !hashService.getHashFrom(userDTO.getPassword()).equals(userEntityOptional.get().getPasswordHash()) :
-                !userDTO.getCode().equals(userEntityOptional.get().getCodeHash()));
-
-        if (isPasswordOrLoginCorrect)
+        if (userEntityOptional.isEmpty() || !hashService.getHashFrom(userDTO.getPassword()).equals(userEntityOptional.get().getPasswordHash()))
             throw new AuthorizationException("Неправильная почта или пароль");
+
+        return "success";
+    }
+
+    public String checkLoginAbilityWithCode(UserDTO userDTO) {
+        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(userDTO.getEmail());
+
+        if (userEntityOptional.isEmpty() || !userDTO.getCode().equals(userEntityOptional.get().getCodeHash()))
+            throw new AuthorizationException("Неправильная почта или токен");
         UserEntity userEntity = userEntityOptional.get();
         if (userEntity.getExpireAuthorisationDate() == null || LocalDate.now().isAfter(userEntity.getExpireAuthorisationDate()))
             throw new AuthorizationException("Срок авторизации истёк");
