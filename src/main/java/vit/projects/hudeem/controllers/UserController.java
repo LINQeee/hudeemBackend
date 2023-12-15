@@ -39,5 +39,4 @@ public class UserController {
     public ResponseEntity<?> userLoginCode(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.checkLoginAbilityWithCode(userDTO));
     }
-
 }
