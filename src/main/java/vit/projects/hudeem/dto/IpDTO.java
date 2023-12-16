@@ -1,5 +1,6 @@
 package vit.projects.hudeem.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data

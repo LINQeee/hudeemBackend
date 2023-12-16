@@ -19,6 +19,7 @@ public class CodeService {
     private final HashService hashService;
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final IpService ipService;
 
     public void generateAndSendCode(String email) {
         String newCode = generateCode();
@@ -41,7 +42,8 @@ public class CodeService {
             else
                 userEntity.setExpireAuthorisationDate(LocalDate.now());
             userRepository.save(userEntity);
-            return ResponseEntity.ok(UserDTO.builder().email(userEntity.getEmail()).code(userEntity.getCodeHash()));
+            ipService.saveNewIp(userEntity.getId(), userDTO.getIp());
+            return ResponseEntity.ok(UserDTO.builder().email(userEntity.getEmail()).code(userEntity.getCodeHash()).build());
         } else return ResponseEntity.status(500).body("Неверный код");
     }
 
