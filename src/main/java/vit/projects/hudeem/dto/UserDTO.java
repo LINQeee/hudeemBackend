@@ -1,6 +1,7 @@
 package vit.projects.hudeem.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserDTO {
     private Long id;
     private String email;
@@ -21,9 +23,4 @@ public class UserDTO {
     private LocalDate expireAuthorisationDate;
     private boolean isRememberMe;
     private String ip;
-
-    public UserDTO(String email, String password){
-        this.email = email;
-        this.password = password;
-    }
 }
