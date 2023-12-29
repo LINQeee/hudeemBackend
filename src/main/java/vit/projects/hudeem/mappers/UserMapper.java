@@ -16,8 +16,10 @@ public abstract class UserMapper {
 
     @Mapping(target = "passwordHash", expression = "java(hashService.getHashFrom(userDTO.getPassword()))")
     @Mapping(target = "codeHash", expression = "java(hashService.getHashFrom(userDTO.getCode()))")
+    @Mapping(target = "authTokenHash", expression = "java(hashService.getHashFrom(userDTO.getAuthToken()))")
     public abstract UserEntity fromDTO(UserDTO userDTO);
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "code", ignore = true)
+    @Mapping(target = "authToken", ignore = true)
     public abstract UserDTO toDTO(UserEntity entity);
 }

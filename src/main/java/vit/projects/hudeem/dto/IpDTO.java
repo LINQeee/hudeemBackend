@@ -4,13 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class IpDTO {
     private Long id;
     private Long userId;
     private String ip;
-
-    public IpDTO(Long userId, String ip) {
-        this.userId = userId;
-        this.ip = ip;
-    }
 }

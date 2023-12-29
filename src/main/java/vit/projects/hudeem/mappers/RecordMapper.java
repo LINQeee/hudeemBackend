@@ -14,12 +14,14 @@ public abstract class RecordMapper {
 
     @Autowired
     public GoalRepository goalRepository;
+
     @Mapping(target = "goal", expression = "java(getGoal(recordDTO.getGoalId()))")
     public abstract RecordEntity fromDTO(RecordDTO recordDTO);
+
     @Mapping(target = "goalId", source = "goal.id")
     public abstract RecordDTO toDTO(RecordEntity entity);
 
     public GoalEntity getGoal(Long id) {
-        return goalRepository.findById(id).get();
+        return goalRepository.findById(id).orElse(null);
     }
 }

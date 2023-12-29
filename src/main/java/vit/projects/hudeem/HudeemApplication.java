@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class HudeemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HudeemApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HudeemApplication.class, args);
+    }
 
 }

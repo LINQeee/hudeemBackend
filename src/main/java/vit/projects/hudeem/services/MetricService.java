@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vit.projects.hudeem.entities.GoalEntity;
 import vit.projects.hudeem.entities.RecordEntity;
-import vit.projects.hudeem.repositories.RecordRepository;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -18,74 +18,78 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @RequiredArgsConstructor
 public class MetricService {
 
+    private final DecimalFormat twoDigitFormat = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(Locale.US));
+
+    private double formatDoubleTwoDigit(double number) {
+        return Double.parseDouble(twoDigitFormat.format(number));
+    }
+
+
     private double getPerDay(RecordEntity latestRecord) {
         GoalEntity goalEntity = latestRecord.getGoal();
-        long duration = DAYS.between(goalEntity.getStartDate(), latestRecord.getDate());
-        if (duration <= 0) duration = 1;
+        long goalDuration = Math.max(DAYS.between(goalEntity.getStartDate(), latestRecord.getDate()), 1);
         double weightDiff = goalEntity.getInitialWeight() - getCurrentWeight(latestRecord);
-        double perDay = weightDiff / duration;
-        return Double.parseDouble(new DecimalFormat("#.##").format(perDay).replace(",", "."));
+        double perDay = weightDiff / goalDuration;
+        return formatDoubleTwoDigit(perDay);
     }
 
     private double getPerWeek(RecordEntity latestRecord) {
         double perWeek = getPerDay(latestRecord) * 7;
-        return Double.parseDouble(new DecimalFormat("#.##").format(perWeek).replace(",", "."));
+        return formatDoubleTwoDigit(perWeek);
     }
 
     private LocalDate getPlannedDate(RecordEntity latestRecord) {
+        double perDay = getPerDay(latestRecord);
+        if (perDay <= 0) return null;
         double daysLeft = getWeightLeft(latestRecord) / getPerDay(latestRecord);
         return latestRecord.getDate().plusDays((long) daysLeft);
     }
 
     private double getCurrentWeight(RecordEntity latestRecord) {
         double current = latestRecord.getCurrentWeight();
-        return Double.parseDouble(new DecimalFormat("#.##").format(current).replace(",", "."));
+        return formatDoubleTwoDigit(current);
     }
 
     private double getWeightLost(RecordEntity latestRecord) {
         double lost = latestRecord.getGoal().getInitialWeight() - latestRecord.getCurrentWeight();
-        return Double.parseDouble(new DecimalFormat("#.##").format(lost).replace(",", "."));
+        return formatDoubleTwoDigit(lost);
     }
 
     private double getWeightLeft(RecordEntity latestRecord) {
         double left = latestRecord.getCurrentWeight() - latestRecord.getGoal().getGoalWeight();
-        return Double.parseDouble(new DecimalFormat("#.##").format(left).replace(",", "."));
+        return formatDoubleTwoDigit(left);
     }
 
     private double getProgress(RecordEntity latestRecord) {
         GoalEntity goalEntity = latestRecord.getGoal();
-        double current = goalEntity.getInitialWeight() - latestRecord.getCurrentWeight();
-        double total = goalEntity.getInitialWeight() - goalEntity.getGoalWeight();
-        double progress = current / total;
-        return Double.parseDouble(new DecimalFormat("#.##").format(progress).replace(",", "."));
+        double lost = goalEntity.getInitialWeight() - latestRecord.getCurrentWeight();
+        double totalLeft = goalEntity.getInitialWeight() - goalEntity.getGoalWeight();
+        double progress = lost / totalLeft;
+        return formatDoubleTwoDigit(progress);
     }
 
     private int getPerDayProgress(RecordEntity latestRecord) {
-        List<RecordEntity> recordsDayBefore = latestRecord.getGoal().getRecords().stream()
+        List<RecordEntity> recordsDayBeforeLatest = latestRecord.getGoal().getRecords().stream()
                 .filter(record -> record.getDate().isBefore(latestRecord.getDate()))
                 .sorted(Comparator.comparing(RecordEntity::getDate))
                 .toList();
 
-        if (recordsDayBefore.isEmpty()) return 0;
-        else {
-            double perDay = getPerDay(latestRecord);
-            double perDayBefore = getPerDay(recordsDayBefore.get(recordsDayBefore.size() - 1));
-            return (int) Math.round(perDay / perDayBefore * 100);
-        }
+        return recordsDayBeforeLatest.stream()
+                .max(Comparator.comparing(RecordEntity::getDate))
+                .map(record -> (int) Math.round(getPerDay(latestRecord) / getPerDay(record) * 100))
+                .orElse(0);
     }
 
     private int getPerWeekProgress(RecordEntity latestRecord) {
-        List<RecordEntity> recordsWeekBefore = latestRecord.getGoal().getRecords().stream()
+        List<RecordEntity> recordsWeekBeforeLatest = latestRecord.getGoal().getRecords().stream()
                 .filter(record -> record.getDate().isBefore(latestRecord.getDate().minusWeeks(1)))
                 .sorted(Comparator.comparing(RecordEntity::getDate))
                 .toList();
 
-        if (recordsWeekBefore.isEmpty()) return 0;
-        else {
-            double perWeek = getPerWeek(latestRecord);
-            double perWeekBefore = getPerWeek(recordsWeekBefore.get(recordsWeekBefore.size() - 1));
-            return (int) Math.round(perWeek / perWeekBefore * 100);
-        }
+        return recordsWeekBeforeLatest.stream()
+                .max(Comparator.comparing(RecordEntity::getDate))
+                .map(record -> (int) Math.round(getPerWeek(latestRecord) / getPerWeek(record) * 100))
+                .orElse(0);
     }
 
     public GoalEntity getUpdatedWithAllMetrics(RecordEntity recordEntity) {
@@ -106,7 +110,7 @@ public class MetricService {
         goalEntity.setCurrentWeight(goalEntity.getInitialWeight());
         goalEntity.setPerDay(0);
         goalEntity.setPerWeek(0);
-        goalEntity.setPlannedDate(LocalDate.now());
+        goalEntity.setPlannedDate(goalEntity.getStartDate());
         goalEntity.setProgress(0);
         goalEntity.setWeightLeft(goalEntity.getInitialWeight() - goalEntity.getGoalWeight());
         goalEntity.setWeightLost(0);

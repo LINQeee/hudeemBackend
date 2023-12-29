@@ -23,4 +23,5 @@ public class UserDTO {
     private LocalDate expireAuthorisationDate;
     private boolean isRememberMe;
     private String ip;
+    private String authToken;
 }

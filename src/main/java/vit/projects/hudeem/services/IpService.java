@@ -7,7 +7,6 @@ import vit.projects.hudeem.mappers.IpMapper;
 import vit.projects.hudeem.repositories.IpRepository;
 
 @Service
-
 @RequiredArgsConstructor
 public class IpService {
 
@@ -15,7 +14,8 @@ public class IpService {
     private final IpMapper ipMapper;
 
     public void saveNewIp(Long userId, String ip) {
-        IpDTO ipDTO = new IpDTO(userId, ip);
+        if (ipRepository.findByUserIdAndIp(userId, ip).isPresent()) return;
+        IpDTO ipDTO = IpDTO.builder().userId(userId).ip(ip).build();
         ipRepository.save(ipMapper.fromDTO(ipDTO));
     }
 }

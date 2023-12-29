@@ -22,12 +22,11 @@ public class RecordService {
     private final MetricService metricService;
     private final RecordValidationService recordValidationService;
 
-    public String saveRecord(RecordDTO recordDTO) {
+    public void saveRecord(RecordDTO recordDTO) {
         RecordEntity recordEntity = recordMapper.fromDTO(recordDTO);
         recordValidationService.validate(recordEntity);
         recordRepository.save(recordEntity);
         updateMetricsAndSave(recordEntity.getGoal());
-        return "successful";
     }
 
     private Optional<RecordEntity> getLatestRecord(GoalEntity goalEntity) {
@@ -37,12 +36,14 @@ public class RecordService {
     }
 
     public void deleteRecordsByGoalId(Long goalId) {
-        List<RecordEntity> recordEntities = recordRepository.findAllByGoalId(goalId).get();
+        List<RecordEntity> recordEntities = recordRepository.findAllByGoalId(goalId).orElseThrow(() -> new RuntimeException("No records for goal with id " + goalId));
         recordRepository.deleteAll(recordEntities);
     }
 
     public String deleteRecord(long id) {
-        GoalEntity goalEntity = recordRepository.findById(id).get().getGoal();
+        GoalEntity goalEntity = recordRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No record with id " + id))
+                .getGoal();
         recordRepository.deleteById(id);
         updateMetricsAndSave(goalEntity);
         return "Запись успешно удалена!";

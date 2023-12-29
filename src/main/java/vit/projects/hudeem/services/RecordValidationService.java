@@ -11,9 +11,8 @@ import java.util.Objects;
 @Service
 public class RecordValidationService {
     private void validateFutureDate(RecordEntity toSave) {
-        if (toSave.getDate().isAfter(LocalDate.now())) {
+        if (toSave.getDate().isAfter(LocalDate.now()))
             throw new ValidationException("Нельзя использовать дату из будущего!", InputFieldType.DATE);
-        }
     }
 
     private void validateExistingDate(RecordEntity toSave) {
@@ -23,7 +22,7 @@ public class RecordValidationService {
                         .stream()
                         .filter(r -> Objects.equals(r.getId(), toSave.getId()))
                         .findFirst()
-                        .get()
+                        .orElseThrow(() -> new RuntimeException("Unknown record with id: " + toSave.getId()))
                         .getDate())) {
             return;
         }
@@ -38,15 +37,13 @@ public class RecordValidationService {
     }
 
     private void validateDateBeforeStart(RecordEntity toSave) {
-        if (toSave.getDate().isBefore(toSave.getGoal().getStartDate())) {
+        if (toSave.getDate().isBefore(toSave.getGoal().getStartDate()))
             throw new ValidationException("Нельзя указать дату до старта цели!", InputFieldType.DATE);
-        }
     }
 
     private void validateWeight(RecordEntity toSave) {
-        if (toSave.getCurrentWeight() <= 0) {
+        if (toSave.getCurrentWeight() <= 0)
             throw new ValidationException("Введите корректное значение веса!", InputFieldType.WEIGHT);
-        }
     }
 
     public void validate(RecordEntity toSave) {
