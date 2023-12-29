@@ -17,6 +17,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (request.getMethod().equalsIgnoreCase("OPTIONS")) return true;
         UserDTO userDTO = UserDTO.builder().ip(ControllerUtils.getIpAddress(request)).authToken(request.getHeader("Authorization")).email(request.getHeader("email")).build();
         userService.checkLoginAbilityWithToken(userDTO);
         return true;

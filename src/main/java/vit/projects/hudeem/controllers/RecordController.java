@@ -10,7 +10,6 @@ import vit.projects.hudeem.services.UserService;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
 public class RecordController {
     private final RecordService recordService;
     private final RecordRepository recordRepository;

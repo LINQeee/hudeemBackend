@@ -9,7 +9,6 @@ import vit.projects.hudeem.dto.UserDTO;
 import vit.projects.hudeem.services.CodeService;
 import vit.projects.hudeem.utils.ControllerUtils;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 public class CodeController {
