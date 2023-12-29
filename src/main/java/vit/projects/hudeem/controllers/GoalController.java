@@ -9,6 +9,7 @@ import vit.projects.hudeem.services.UserService;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class GoalController {
 
     private final GoalService goalService;
