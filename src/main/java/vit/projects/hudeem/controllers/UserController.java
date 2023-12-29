@@ -7,8 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vit.projects.hudeem.dto.SummaryDTO;
 import vit.projects.hudeem.dto.UserDTO;
+import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.services.UserService;
 import vit.projects.hudeem.utils.ControllerUtils;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +36,8 @@ public class UserController {
 
     @GetMapping("/auth/summary/{id}")
     public ResponseEntity<SummaryDTO> getUserInfo(@RequestHeader String email, @PathVariable Long id) {
-        if (!userService.getUserByEmail(email).getId().equals(id))
+        Optional<UserEntity> userEntity = Optional.ofNullable(userService.getUserByEmail(email));
+        if (userEntity.isEmpty() || !userEntity.get().getId().equals(id))
             throw new RuntimeException("Wrong user");
         return ResponseEntity.ok(userService.getSummary(id));
     }
