@@ -9,8 +9,6 @@ import vit.projects.hudeem.dto.ErrorDTO;
 import vit.projects.hudeem.exceptions.AuthorizationException;
 import vit.projects.hudeem.exceptions.ValidationException;
 
-import javax.naming.AuthenticationException;
-
 @ControllerAdvice
 @Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {

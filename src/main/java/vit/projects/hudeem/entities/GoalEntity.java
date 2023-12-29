@@ -15,9 +15,7 @@ public class GoalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private double initialWeight;
-    @Column(nullable = false)
     private double goalWeight;
     private double progress;
     @ManyToOne
@@ -28,7 +26,6 @@ public class GoalEntity {
     private double perDay;
     private double perWeek;
     private LocalDate plannedDate;
-    @Column(nullable = false)
     private double currentWeight;
     private double weightLost;
     private double weightLeft;

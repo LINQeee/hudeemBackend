@@ -11,15 +11,12 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "record")
 public class RecordEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private double currentWeight;
-
     @Column(unique = true, nullable = false)
     private LocalDate date;
-
     @ManyToOne
     @JoinColumn(name = "goal_id", nullable = false)
     private GoalEntity goal;

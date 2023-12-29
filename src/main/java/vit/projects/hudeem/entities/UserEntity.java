@@ -29,8 +29,11 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<GoalEntity> goals;
     private LocalDate expireAuthorisationDate;
+    private String authTokenHash;
 
-    public boolean containsIp(String ip){
+    public boolean containsIp(String ip) {
         return ips.stream().anyMatch(ipEntity -> ipEntity.getIp().equals(ip));
     }
+
+    public boolean containsGoal(Long goalId) { return goals.stream().anyMatch(goalEntity -> goalEntity.getId().equals(goalId)); }
 }

@@ -11,6 +11,7 @@ import vit.projects.hudeem.entities.UserEntity;
 import vit.projects.hudeem.repositories.RecordRepository;
 import vit.projects.hudeem.repositories.UserRepository;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,20 +33,22 @@ public abstract class GoalMapper {
     public abstract GoalDTO toDTO(GoalEntity entity);
 
     public UserEntity getUser(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElse(null);
     }
 
     public List<RecordDTO> getDTOs(Long goalId) {
-        List<RecordEntity> recordEntities = recordRepository.findAllByGoalId(goalId).get();
+        List<RecordEntity> recordEntities = recordRepository.findAllByGoalId(goalId).orElse(null);
 
-        return recordEntities
-                .stream()
-                .map(recordEntity -> {
-            var dto = recordMapper.toDTO(recordEntity);
-            dto.setGoalId(goalId);
-            return dto;
-        })
-                .sorted(Comparator.comparing(RecordDTO::getDate))
-                .toList();
+        return recordEntities == null ?
+                Collections.emptyList() :
+                recordEntities
+                        .stream()
+                        .map(recordEntity -> {
+                            var dto = recordMapper.toDTO(recordEntity);
+                            dto.setGoalId(goalId);
+                            return dto;
+                        })
+                        .sorted(Comparator.comparing(RecordDTO::getDate))
+                        .toList();
     }
 }

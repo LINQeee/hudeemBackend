@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class HashService {
     public String getHashFrom(String value) {
-        if (value == null || value.isBlank() || value.isEmpty()) return null;
+        if (value == null || value.isBlank()) return null;
         SHA3Digest digestSHA3 = new SHA3Digest(256);
 
         byte[] inputBytes = value.getBytes(StandardCharsets.UTF_8);

@@ -13,12 +13,14 @@ import vit.projects.hudeem.repositories.UserRepository;
 public abstract class IpMapper {
     @Autowired
     public UserRepository userRepository;
+
     @Mapping(target = "user", expression = "java(getUser(ipDTO.getUserId()))")
     public abstract IpEntity fromDTO(IpDTO ipDTO);
+
     @Mapping(target = "userId", source = "user.id")
     public abstract IpDTO toDTO(IpEntity entity);
 
     public UserEntity getUser(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElse(null);
     }
 }

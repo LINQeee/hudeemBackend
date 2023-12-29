@@ -8,6 +8,7 @@ import vit.projects.hudeem.mappers.GoalMapper;
 import vit.projects.hudeem.repositories.GoalRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,21 +18,19 @@ public class GoalService {
     private final GoalMapper goalMapper;
     private final RecordService recordService;
 
-    public String saveGoal(GoalDTO goalDTO) {
+    public void saveGoal(GoalDTO goalDTO) {
         GoalEntity goalEntity = goalMapper.fromDTO(goalDTO);
         goalEntity.setCurrentWeight(goalEntity.getInitialWeight());
         goalEntity.setStartDate(LocalDate.now());
         goalRepository.save(goalEntity);
-        return "success";
     }
 
-    public String deleteGoal(Long goalId) {
+    public void deleteGoal(Long goalId) {
         recordService.deleteRecordsByGoalId(goalId);
         goalRepository.deleteById(goalId);
-        return "success";
     }
 
-    public GoalDTO getGoalDTOById(Long goalId) {
-        return goalMapper.toDTO(goalRepository.findById(goalId).get());
+    public Optional<GoalDTO> getGoalDTOById(Long goalId) {
+        return Optional.ofNullable(goalMapper.toDTO(goalRepository.findById(goalId).orElse(null)));
     }
 }
