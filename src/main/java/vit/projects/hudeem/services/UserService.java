@@ -50,7 +50,7 @@ public class UserService {
     public String checkLoginAbilityWithToken(UserDTO userDTO) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(userDTO.getEmail());
 
-        if (userEntityOptional.isEmpty() || !hashService.getHashFrom(userDTO.getAuthToken()).equals(userEntityOptional.get().getAuthTokenHash()))
+        if (userEntityOptional.isEmpty() || !userDTO.getAuthToken().equals(userEntityOptional.get().getAuthTokenHash()))
             throw new AuthorizationException("Неправильная почта или токен");
         UserEntity userEntity = userEntityOptional.get();
         if (userEntity.getExpireAuthorisationDate() == null || LocalDate.now().isAfter(userEntity.getExpireAuthorisationDate()))

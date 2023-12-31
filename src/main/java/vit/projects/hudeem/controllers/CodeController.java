@@ -2,6 +2,7 @@ package vit.projects.hudeem.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +24,9 @@ public class CodeController {
         return ResponseEntity.ok("success");
     }
 
-    @GetMapping("/check-code")
-    public ResponseEntity<?> checkCode(@RequestParam String code, @RequestParam boolean rememberMe, @RequestHeader String email) {
-        UserDTO userDTO = UserDTO.builder()
-                .code(code)
-                .email(email)
-                .ip(ControllerUtils.getIpAddress(request))
-                .isRememberMe(rememberMe)
-                .build();
+    @PostMapping("/check-code")
+    public ResponseEntity<?> checkCode(@RequestBody UserDTO userDTO) {
+        userDTO.setIp(ControllerUtils.getIpAddress(request));
         return codeService.checkCode(userDTO);
     }
 }

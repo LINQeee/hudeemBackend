@@ -23,6 +23,7 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
+        userDTO.setIp(ControllerUtils.getIpAddress(request));
         return ResponseEntity.ok(userService.saveUser(userDTO));
     }
 
@@ -42,14 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/user-login-psw")
-    public ResponseEntity<String> userLoginPsw(@RequestHeader String email, @RequestParam String password) {
-        UserDTO userDTO = UserDTO.builder().ip(ControllerUtils.getIpAddress(request)).email(email).password(password).build();
+    public ResponseEntity<String> userLoginPsw(@RequestParam String email, @RequestParam String password) {
+        UserDTO userDTO = UserDTO.builder().email(email).password(password).build();
         return ResponseEntity.ok(userService.checkLoginAbilityWithPsw(userDTO));
-    }
-
-    @GetMapping("/user-login-token")
-    public ResponseEntity<String> userLoginToken(@RequestHeader String email, @RequestHeader("Authorization") String authToken) {
-        UserDTO userDTO = UserDTO.builder().authToken(authToken).ip(ControllerUtils.getIpAddress(request)).email(email).build();
-        return ResponseEntity.ok(userService.checkLoginAbilityWithToken(userDTO));
     }
 }

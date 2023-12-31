@@ -33,7 +33,7 @@ public class CodeService {
     }
 
     public ResponseEntity<?> checkCode(UserDTO userDTO) {
-        UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(() -> new RuntimeException("User with id " + userDTO.getId() + " not found when checking code"));
+        UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(() -> new RuntimeException("User with email " + userDTO.getEmail() + " not found when checking code"));
 
         String codeHash = hashService.getHashFrom(userDTO.getCode());
         if (codeHash.equals(userEntity.getCodeHash())) {
